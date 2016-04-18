@@ -55,3 +55,35 @@ CentOS release 6.5 (Final)
  make mrproper
  make clean
 ```
+
+## 可能出现的问题：
+```
+[root@localhost ~]# service docker start 
+Starting cgconfig service: Error: cannot mount memory to /cgroup/memory: No such file or directory
+/sbin/cgconfigparser; error loading /etc/cgconfig.conf: Cgroup mounting failed
+Failed to parse /etc/cgconfig.conf or /etc/cgconfig.d[FAILED]
+
+办法：
+ #编辑内核配置，开启内核CGROUP支持
+ make menuconfig
+ #选择General setup-->Control Group support->Memory Resource Controller for Control Groups选中
+ 
+ 检查cgconfig 是否启动
+ /etc/init.d/cgconfig status
+ 未启动时
+ 修改vim /etc/cgconfig.conf（注释掉memory）
+ #    memory    = /cgroup/memory
+ 重启  /etc/init.d/cgconfig restart
+```
+```
+[root@localhost ~]# docker -d
+INFO[0000] Listening for HTTP on unix (/var/run/docker.sock) 
+INFO[0000] [graphdriver] using prior storage driver "devicemapper" 
+FATA[0000] Error starting daemon: Error initializing network controller: Error creating default "bridge" network: Failed to Setup IP tables: Unable to enable NAT rule: iptables failed: iptables -t nat -I POSTROUTING -s 172.17.42.1/16 ! -o docker0 -j MASQUERADE: iptables v1.4.7: can't initialize iptables table `nat': Table does not exist (do you need to insmod?)
+Perhaps iptables or your kernel needs to be upgraded.
+ (exit status 3) 
+You have new mail in /var/spool/mail/root
+[root@localhost ~]# 
+
+原因是： iptables模块没有配置
+```
