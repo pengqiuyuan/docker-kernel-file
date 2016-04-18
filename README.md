@@ -51,7 +51,7 @@ CentOS release 6.5 (Final)
 ## 注意事项：
 ```
  # 重新编译内核请运行
- cd /usr/src/linux-3.12.17
+ cd /usr/src/kernels/linux-4.4.7
  make mrproper
  make clean
 ```
